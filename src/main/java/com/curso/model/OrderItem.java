@@ -37,5 +37,4 @@ public class OrderItem {
     @Digits(integer = 8, fraction = 2)
     @Column(name = "precio_unitario", nullable = false, precision = 10, scale = 2)
     private BigDecimal unitPrice;
-
 }

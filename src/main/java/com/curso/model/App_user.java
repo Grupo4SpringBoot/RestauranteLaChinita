@@ -32,6 +32,6 @@ public class App_user {
     // Relación colocada CORRECTAMENTE dentro de la clase
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore // Evita bucles infinitos al transformar a JSON
-    private List<Pedido> pedidos;
+    private List<Order> pedidos;
 }
 

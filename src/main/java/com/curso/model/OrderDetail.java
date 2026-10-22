@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 @Setter
 @NoArgsConstructor
 @Table(name = "detalle_pedido")
-public class OrderItem {
+public class OrderDetail {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,9 +26,9 @@ public class OrderItem {
     @JoinColumn(name = "pedido_id", nullable = false)
     private Order order;
 
-    /*@ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "menu_id", nullable = false)
-    private Menu menuItem;*/
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "producto_id", nullable = false)
+    private Producto product;
 
     @Column(name = "cantidad", nullable = false)
     private int quantity;

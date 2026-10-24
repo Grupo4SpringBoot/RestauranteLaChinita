@@ -36,7 +36,7 @@ public class ProductoController {
 
     // GET: Buscar un producto específico por su ID único
     @GetMapping("/{id}")
-    public ResponseEntity<Producto> getProductoById(@PathVariable Long id) {
+    public ResponseEntity<Producto> getProductoById(@PathVariable Integer id) {
         return productoRepository.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());

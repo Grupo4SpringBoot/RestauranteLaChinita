@@ -17,7 +17,7 @@ public class Producto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Setter(AccessLevel.NONE)
-    private Long id; // Corresponde a 'id serial'
+    private Integer id; // Corresponde a 'id serial'
 
     @Column(name = "nombre", length = 100, nullable = false)
     private String nombre; // Corresponde a 'nombre character varying(100)'

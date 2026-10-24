@@ -12,15 +12,15 @@ import java.util.List; // Importante para poder usar List<>
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "users")
-public class App_user {
+@Table(name = "app_usuario")
+public class AppUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Setter(AccessLevel.NONE)
     private Integer id;
 
-    @Column(name = "username", nullable = false, unique = true, length = 50)
+    @Column(name = "nombre", nullable = false, unique = true, length = 50)
     private String username;
 
     @Column(name = "password", nullable = false)
@@ -30,8 +30,8 @@ public class App_user {
     private String email;
 
     // Relación colocada CORRECTAMENTE dentro de la clase
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @JsonIgnore // Evita bucles infinitos al transformar a JSON
-    private List<Producto> pedidos;
+    private List<Reservation> reservas;
 }
 

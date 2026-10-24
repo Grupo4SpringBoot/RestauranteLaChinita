@@ -1,4 +1,4 @@
-﻿package com.curso.dto;
+package com.curso.dto;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;

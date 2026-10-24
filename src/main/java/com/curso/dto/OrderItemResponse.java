@@ -1,4 +1,4 @@
-﻿package com.curso.dto;
+package com.curso.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

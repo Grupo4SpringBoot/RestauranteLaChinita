@@ -1,4 +1,4 @@
-﻿package com.curso.dto;
+package com.curso.dto;
 
 import com.curso.model.OrderStatus;
 import lombok.Getter;

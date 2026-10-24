@@ -1,9 +1,7 @@
 package com.curso.repository;
 
-import com.curso.model.Reservation;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import com.curso.model.Reservation; // Revisa si tu entidad está en este paquete
 
-@Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Integer> {
 }

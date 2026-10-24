@@ -10,4 +10,6 @@ public interface ProductoRepository extends JpaRepository<Producto, Integer> {
 
     // Método útil para buscar solo productos del catálogo que estén vigentes
     List<Producto> findByActivoTrue();
+
+    long countByActivoTrue();
 }

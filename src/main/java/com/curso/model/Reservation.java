@@ -25,10 +25,10 @@ public class Reservation {
     @Setter(AccessLevel.NONE)
     private int id;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "usuario_id", nullable = false)
-    private AppUser user;
+//    @NotNull
+//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+//    @JoinColumn(name = "usuario_id", nullable = false)
+//    private AppUser user;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

@@ -18,7 +18,7 @@ public class App_user {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Setter(AccessLevel.NONE)
-    private int id;
+    private Integer id;
 
     @Column(name = "username", nullable = false, unique = true, length = 50)
     private String username;
@@ -32,6 +32,6 @@ public class App_user {
     // Relación colocada CORRECTAMENTE dentro de la clase
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore // Evita bucles infinitos al transformar a JSON
-    private List<Order> pedidos;
+    private List<Producto> pedidos;
 }
 

@@ -275,5 +275,24 @@ public class OrderService {
         Order savedOrder = orderRepository.save(order);
         return orderMapper.toResponse(savedOrder);
     }
+
+    @Transactional
+    public void cancelPedingOrdersByReservationId(Integer reservationId){
+        if (reservationId== null || reservationId<=0){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El identificador de la reserva debe ser mayor a 0");
+        }
+
+        if (!reservationRepository.existsById(reservationId)){
+            throw new ResourceNotFoundException("No existe la reservacion "+ reservationId);
+        }
+
+        List<Order> orders = orderRepository.findByReservation_IdOrderByCreatedAtAscIdAsc(reservationId);
+
+        for (Order order : orders){
+            if (order.getStatus() == OrderStatus.PENDIENTE){
+                order.setStatus(OrderStatus.CANCELADO);
+            }
+        }
+    }
 }
 

@@ -1,15 +1,14 @@
 package com.curso.repository;
 
 import com.curso.model.AppUser;
-import jakarta.validation.constraints.NotBlank;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
 public interface AppUserRepository extends JpaRepository<AppUser, Integer> {
-    // Buscar un usuario por su nombre (clave para el login)
-    Optional<AppUser> findByUsername(String username);
+    // El login se identifica por email, que es la UNIQUE en la base de datos (el nombre puede repetirse)
+    Optional<AppUser> findByEmail(String email);
 
-    boolean existsByUsername(@NotBlank(message = "El nombre de usuario es obligatorio") String username);
+    boolean existsByEmail(String email);
 }

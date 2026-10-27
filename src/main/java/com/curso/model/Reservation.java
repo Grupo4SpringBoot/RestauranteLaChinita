@@ -7,11 +7,10 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import jakarta.persistence.Table;
-
 
 @Entity
 @Getter
@@ -23,12 +22,12 @@ public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Setter(AccessLevel.NONE)
-    private int id;
+    private Integer id;
 
-//    @NotNull
-//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-//    @JoinColumn(name = "usuario_id", nullable = false)
-//    private AppUser user;
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private AppUser user;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -41,20 +40,19 @@ public class Reservation {
 
     @Min(value = 1, message = "Debe haber al menos una persona")
     @Column(name = "num_personas", nullable = false)
-    private int numGuests;
+    private Integer numGuests;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "estado", nullable = false, length = 20)
     private ReservationStatus status = ReservationStatus.PENDIENTE;
 
     @Column(name = "confirmada")
-    private boolean confirmed = false;
+    private Boolean confirmed = false;
 
     @Column(name = "created_at", insertable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Order> orders = new ArrayList<>();
-
 
 }

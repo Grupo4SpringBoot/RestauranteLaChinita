@@ -8,6 +8,7 @@ import com.curso.model.UserRolType;
 import com.curso.repository.AppUserRepository; // Sincronizado con tu nuevo repositorio
 import com.curso.security.AppUserDetails;
 import com.curso.security.JwtTokenService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +42,7 @@ public class AppUserController { // Nombre físico del archivo actual
     }
 
     // 1. REGISTRO (Guarda la contraseña en Hash BCrypt y asigna Rol CLIENTE de forma unificada)
+    @SecurityRequirements
     @PostMapping("/registro")
     public ResponseEntity<?> registrarUsuario(@Valid @RequestBody UserRegistrationRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
@@ -59,6 +61,7 @@ public class AppUserController { // Nombre físico del archivo actual
     }
 
     // 2. INICIO DE SESIÓN (Spring Security valida el hash, comprueba que la cuenta esté activa y crea el token con permisos)
+    @SecurityRequirements
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {
         try {

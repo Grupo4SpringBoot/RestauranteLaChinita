@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -18,10 +19,12 @@ public class OpenApiConfig {
 
     @Bean
     public OpenAPI openAPI() {
-        return new OpenAPI().info(new Info()
-                .title("API Restaurante La Chinita")
-                .description("API REST para la gestión de usuarios, catálogo, reservas y pedidos")
-                .version("1.0.0")
-                .contact(new Contact().name("Grupo 4")));
+        return new OpenAPI()
+                .info(new Info()
+                        .title("API Restaurante La Chinita")
+                        .description("API REST para la gestión de usuarios, catálogo, reservas y pedidos")
+                        .version("1.0.0")
+                        .contact(new Contact().name("Grupo 4")))
+                .addSecurityItem(new SecurityRequirement().addList("bearerAuth"));
     }
 }

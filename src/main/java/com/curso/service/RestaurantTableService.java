@@ -2,6 +2,8 @@ package com.curso.service;
 
 import com.curso.dto.RestaurantTableRequest;
 import com.curso.dto.RestaurantTableResponse;
+import com.curso.exception.BusinessRuleException;
+import com.curso.mapper.RestaurantTableMapper;
 import com.curso.model.RestaurantTable;
 import com.curso.repository.RestaurantTableRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,32 +18,26 @@ import java.util.Optional;
 public class RestaurantTableService {
 
     private final RestaurantTableRepository tableRepository;
+    private final RestaurantTableMapper tableMapper;
 
     @Transactional
     public RestaurantTableResponse create(RestaurantTableRequest request) {
         if (tableRepository.existsByNumber(request.getNumero())) {
-            throw new IllegalArgumentException("Ya existe una mesa con el numero " + request.getNumero());
+            throw new BusinessRuleException("Ya existe una mesa con el numero " + request.getNumero());
         }
 
-        RestaurantTable table = new RestaurantTable();
-        table.setNumber(request.getNumero());
-        table.setCapacity(request.getCapacidad());
-        table.setLocation(request.getUbicacion());
-        if (request.getActiva() != null) {
-            table.setActive(request.getActiva());
-        }
-
-        return toResponse(tableRepository.save(table));
+        RestaurantTable table = tableMapper.toEntity(request);
+        return tableMapper.toResponse(tableRepository.save(table));
     }
 
     @Transactional(readOnly = true)
     public Optional<RestaurantTableResponse> findById(Integer id) {
-        return tableRepository.findById(id).map(this::toResponse);
+        return tableRepository.findById(id).map(tableMapper::toResponse);
     }
 
     @Transactional(readOnly = true)
     public List<RestaurantTableResponse> findAll() {
-        return tableRepository.findAll().stream().map(this::toResponse).toList();
+        return tableRepository.findAll().stream().map(tableMapper::toResponse).toList();
     }
 
     @Transactional
@@ -52,7 +48,7 @@ public class RestaurantTableService {
         }
 
         if (tableRepository.existsByNumberAndIdNot(request.getNumero(), id)) {
-            throw new IllegalArgumentException("Ya existe otra mesa con el numero " + request.getNumero());
+            throw new BusinessRuleException("Ya existe otra mesa con el numero " + request.getNumero());
         }
 
         RestaurantTable table = found.get();
@@ -63,7 +59,7 @@ public class RestaurantTableService {
             table.setActive(request.getActiva());
         }
 
-        return Optional.of(toResponse(tableRepository.save(table)));
+        return Optional.of(tableMapper.toResponse(tableRepository.save(table)));
     }
 
     @Transactional
@@ -74,15 +70,5 @@ public class RestaurantTableService {
 
         tableRepository.deleteById(id);
         return true;
-    }
-
-    private RestaurantTableResponse toResponse(RestaurantTable table) {
-        RestaurantTableResponse response = new RestaurantTableResponse();
-        response.setId(table.getId());
-        response.setNumero(table.getNumber());
-        response.setCapacidad(table.getCapacity());
-        response.setUbicacion(table.getLocation());
-        response.setActiva(table.getActive());
-        return response;
     }
 }

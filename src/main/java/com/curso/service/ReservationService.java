@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,11 +35,31 @@ public class ReservationService {
     @Transactional
     public ReservationResponse create(ReservationRequest request, String email) {
         AppUser user = resolveUsuario(email);
+
+        LocalDateTime  reservationTime = request.getFechaHora();
+        if (reservationTime==null || !reservationTime.isAfter(LocalDateTime.now())){
+            throw  new ResponseStatusException(BAD_REQUEST, "La fecha y hora debes ser futuras");
+        }
+
         RestaurantTable mesa = resolveMesa(request.getMesaId());
+
+        if (request.getNumPersonas()== null || request.getNumPersonas() <=0){
+            throw new ResponseStatusException(BAD_REQUEST, "El numero de personas debe ser mayor que cero");
+        }
 
         if (request.getNumPersonas() > mesa.getCapacity()) {
             throw new BusinessRuleException("La mesa " + mesa.getNumber()
                     + " tiene una capacidad de " + mesa.getCapacity() + " personas");
+        }
+
+        LocalDateTime overlapLowerBound = reservationTime.minusHours(2);
+        LocalDateTime reservationEnd = reservationTime.plusHours(2);
+
+        boolean occupied =reservationRepository.existsByMesa_IdAndStatusInAndDateTimeGreaterThanAndDateTimeLessThan(mesa.getId(),
+                List.of(ReservationStatus.PENDIENTE, ReservationStatus.CONFIRMADA), overlapLowerBound, reservationEnd);
+
+        if (occupied){
+            throw new BusinessRuleException("La mesa ya tiene una reserva que coincide con ese horario");
         }
 
         Reservation reservation = reservationMapper.toEntity(request, user, mesa);
@@ -95,7 +116,7 @@ public class ReservationService {
     }
 
     private RestaurantTable resolveMesa(Integer mesaId) {
-        RestaurantTable mesa = tableRepository.findById(mesaId)
+        RestaurantTable mesa = tableRepository.findByIdForUpdate(mesaId)
                 .orElseThrow(() -> new ResourceNotFoundException("No existe la mesa " + mesaId));
 
         if (Boolean.FALSE.equals(mesa.getActive())) {

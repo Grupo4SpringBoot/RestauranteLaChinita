@@ -1,5 +1,6 @@
 package com.curso.dto;
 
+import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -23,5 +24,6 @@ public class ReservationRequest {
     private Integer numPersonas;
 
     @NotNull(message = "La fecha y hora son obligatorias")
+    @Future(message = "La reserva debe ser para una fecha y hora futuras")
     private LocalDateTime fechaHora;
 }

@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface OrderRepository extends JpaRepository<Order,Integer> {
     List<Order> findByReservation_IdOrderByCreatedAtAscIdAsc(Integer reservationId);
+
+    boolean existsByIdAndReservation_User_Email(Integer id, String reservationUserEmail);
 }

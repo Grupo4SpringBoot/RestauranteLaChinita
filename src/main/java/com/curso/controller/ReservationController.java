@@ -7,6 +7,7 @@ import com.curso.service.ReservationService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +23,7 @@ public class ReservationController {
         this.reservationService = reservationService;
     }
 
+    @PreAuthorize("hasAuthority('reserva:crear')")
     @PostMapping
     public ResponseEntity<ReservationResponse> create(@Valid @RequestBody ReservationRequest request,
                                                       Authentication authentication) {
@@ -29,11 +31,14 @@ public class ReservationController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @PreAuthorize("hasAuthority('reserva:gestionar')")
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> getAll() {
         return ResponseEntity.ok(reservationService.findAll());
     }
 
+    @PreAuthorize("hasAuthority('reserva:gestionar')or (hasAuthority('reserva:ver')and" +
+            " @ownershipSecurity.ownsReservation(#id, authentication))")
     @GetMapping("/{id}")
     public ResponseEntity<ReservationResponse> getById(@PathVariable Integer id) {
         return reservationService.findById(id)
@@ -41,6 +46,8 @@ public class ReservationController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @PreAuthorize(" hasAuthority('reserva:gestionar')or (hasAuthority('reserva:crear')and " +
+                 "@ownershipSecurity.ownsReservation(#id, authentication)and #request.status == T(com.curso.model.ReservationStatus).CANCELADA)")
     @PatchMapping("/{id}/estado")
     public ResponseEntity<ReservationResponse> updateStatus(@PathVariable Integer id,
                                                              @Valid @RequestBody ReservationStatusRequest request) {
@@ -49,6 +56,7 @@ public class ReservationController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @PreAuthorize("hasAuthority('reserva:gestionar')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
         if (!reservationService.delete(id)) {

@@ -4,10 +4,12 @@ import com.curso.dto.RestaurantTableRequest;
 import com.curso.dto.RestaurantTableResponse;
 import com.curso.service.RestaurantTableService;
 import jakarta.validation.Valid;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -17,17 +19,12 @@ public class RestaurantTableController {
     private final RestaurantTableService tableService;
 
     public RestaurantTableController(RestaurantTableService tableService) {
+
         this.tableService = tableService;
     }
-
-    @PostMapping
-    public ResponseEntity<RestaurantTableResponse> create(@Valid @RequestBody RestaurantTableRequest request) {
-        RestaurantTableResponse response = tableService.create(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
-
     @GetMapping
     public ResponseEntity<List<RestaurantTableResponse>> getAll() {
+
         return ResponseEntity.ok(tableService.findAll());
     }
 
@@ -37,6 +34,20 @@ public class RestaurantTableController {
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
+
+    @GetMapping("/disponibles")
+    public ResponseEntity<List<RestaurantTableResponse>> getAvailable(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+                                                                          LocalDateTime dateTime, @RequestParam Integer people) {
+
+        return ResponseEntity.ok(tableService.findAvailable(dateTime, people));
+    }
+
+    @PostMapping
+    public ResponseEntity<RestaurantTableResponse> create(@Valid @RequestBody RestaurantTableRequest request) {
+        RestaurantTableResponse response = tableService.create(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<RestaurantTableResponse> update(@PathVariable Integer id,

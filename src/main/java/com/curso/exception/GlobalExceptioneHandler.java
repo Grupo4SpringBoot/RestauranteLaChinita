@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.server.ResponseStatusException;
 
+import org.springframework.security.access.AccessDeniedException;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
@@ -76,5 +77,12 @@ public class GlobalExceptioneHandler {
 
         return ResponseEntity.status(exception.getStatusCode())
                 .body(new ErrorResponse(exception.getStatusCode().value(), message));
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleAccessDenied(AccessDeniedException exception) {
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).
+                body(new ErrorResponse(403, "No tienes permiso para realizar esta operación"));
     }
 }

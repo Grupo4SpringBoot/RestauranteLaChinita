@@ -37,4 +37,19 @@ pipeline {
             }
         }
     }
+
+        post {
+            failure {
+                echo "FAILED: ${env.JOB_NAME} #${env.BUILD_NUMBER}"
+                echo "Check the failed stage in Jenkins."
+            }
+
+            success {
+                echo "SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}"
+            }
+
+            fixed {
+                echo "RECOVERED: ${env.JOB_NAME} #${env.BUILD_NUMBER}"
+            }
+        }
 }

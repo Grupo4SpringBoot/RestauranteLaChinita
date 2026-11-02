@@ -27,6 +27,9 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 @RequiredArgsConstructor
 public class ReservationService {
 
+    /** Duracion de una reserva: la mesa queda bloqueada durante estas horas desde su inicio. */
+    public static final int DURACION_RESERVA_HORAS = 2;
+
     private final ReservationRepository reservationRepository;
     private final RestaurantTableRepository tableRepository;
     private final AppUserRepository userRepository;
@@ -52,8 +55,8 @@ public class ReservationService {
                     + " tiene una capacidad de " + mesa.getCapacity() + " personas");
         }
 
-        LocalDateTime overlapLowerBound = reservationTime.minusHours(2);
-        LocalDateTime reservationEnd = reservationTime.plusHours(2);
+        LocalDateTime overlapLowerBound = reservationTime.minusHours(DURACION_RESERVA_HORAS);
+        LocalDateTime reservationEnd = reservationTime.plusHours(DURACION_RESERVA_HORAS);
 
         boolean occupied =reservationRepository.existsByMesa_IdAndStatusInAndDateTimeGreaterThanAndDateTimeLessThan(mesa.getId(),
                 List.of(ReservationStatus.PENDIENTE, ReservationStatus.CONFIRMADA), overlapLowerBound, reservationEnd);

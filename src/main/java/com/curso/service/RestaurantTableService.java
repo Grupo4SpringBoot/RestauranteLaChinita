@@ -88,8 +88,8 @@ public class RestaurantTableService {
         }
 
         // Todas las reservas duran inicialmente dos horas.
-        LocalDateTime startTime = dateTime.minusHours(2);
-        LocalDateTime endTime = dateTime.plusHours(2);
+        LocalDateTime startTime = dateTime.minusHours(ReservationService.DURACION_RESERVA_HORAS);
+        LocalDateTime endTime = dateTime.plusHours(ReservationService.DURACION_RESERVA_HORAS);
 
         return tableRepository.findAvailable(partySize, startTime, endTime, List.of(ReservationStatus.PENDIENTE, ReservationStatus.CONFIRMADA)).
                 stream().map(tableMapper::toResponse).toList();

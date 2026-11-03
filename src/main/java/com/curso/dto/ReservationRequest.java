@@ -18,7 +18,6 @@ public class ReservationRequest {
 
     @NotNull(message = "La mesa es obligatoria")
     @Positive(message = "La mesa debe ser un identificador valido")
-    @Setter(AccessLevel.NONE)
     private Integer mesaId;
 
     @NotNull(message = "El numero de personas es obligatorio")

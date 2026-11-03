@@ -115,8 +115,8 @@ class ReservationServiceTest {
                 .existsByMesa_IdAndStatusInAndDateTimeGreaterThanAndDateTimeLessThan(
                         isNull(),
                         anyList(),
-                        eq(request.getFechaHora().minusHours(2)),
-                        eq(request.getFechaHora().plusHours(2))))
+                        eq(request.getFechaHora().minusHours(ReservationService.DURACION_RESERVA_HORAS)),
+                        eq(request.getFechaHora().plusHours(ReservationService.DURACION_RESERVA_HORAS))))
                 .thenReturn(true);
 
         BusinessRuleException exception = assertThrows(BusinessRuleException.class,
@@ -142,8 +142,8 @@ class ReservationServiceTest {
         when(reservationRepository
                 .existsByMesa_IdAndStatusInAndDateTimeGreaterThanAndDateTimeLessThan(
                         isNull(), eq(List.of(ReservationStatus.PENDIENTE, ReservationStatus.CONFIRMADA)),
-                        eq(request.getFechaHora().minusHours(2)),
-                        eq(request.getFechaHora().plusHours(2))))
+                        eq(request.getFechaHora().minusHours(ReservationService.DURACION_RESERVA_HORAS)),
+                        eq(request.getFechaHora().plusHours(ReservationService.DURACION_RESERVA_HORAS))))
                 .thenReturn(false);
         when(reservationMapper.toEntity(request, user, table)).thenReturn(entity);
         when(reservationRepository.save(entity)).thenReturn(entity);

@@ -37,6 +37,12 @@ public class ReservationController {
         return ResponseEntity.ok(reservationService.findAll());
     }
 
+    @PreAuthorize("hasAuthority('reserva:ver')")
+    @GetMapping("/mias")
+    public ResponseEntity<List<ReservationResponse>> getMine(Authentication authentication) {
+        return ResponseEntity.ok(reservationService.findMine(authentication.getName()));
+    }
+
     @PreAuthorize("hasAuthority('reserva:gestionar')or (hasAuthority('reserva:ver')and" +
             " @ownershipSecurity.ownsReservation(#id, authentication))")
     @GetMapping("/{id}")
@@ -47,7 +53,9 @@ public class ReservationController {
     }
 
     @PreAuthorize(" hasAuthority('reserva:gestionar')or (hasAuthority('reserva:crear')and " +
-                 "@ownershipSecurity.ownsReservation(#id, authentication)and #request.status == T(com.curso.model.ReservationStatus).CANCELADA)")
+                 "@ownershipSecurity.ownsReservation(#id, authentication)and (" +
+                 "#request.status == T(com.curso.model.ReservationStatus).CONFIRMADA or " +
+                 "#request.status == T(com.curso.model.ReservationStatus).CANCELADA))")
     @PatchMapping("/{id}/estado")
     public ResponseEntity<ReservationResponse> updateStatus(@PathVariable Integer id,
                                                              @Valid @RequestBody ReservationStatusRequest request) {

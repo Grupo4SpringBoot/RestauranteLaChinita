@@ -16,5 +16,5 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
                                                                                 LocalDateTime limiteAnterior, LocalDateTime fin);
     List<Reservation> findByStatusAndCreatedAtBefore(ReservationStatus status, LocalDateTime limite);
 
-
+    List<Reservation> findByUser_EmailOrderByDateTimeDesc(String userEmail);
 }

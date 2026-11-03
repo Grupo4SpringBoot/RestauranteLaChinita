@@ -55,6 +55,10 @@ public class OrderService {
                 .findById(createOrderRequest.getReservationId())
                 .orElseThrow(()-> new ResourceNotFoundException("La reserva no existe"));
 
+        if (reservation.getStatus() == ReservationStatus.PENDIENTE){
+            throw new BusinessRuleException("La reserva debe estar confirmada para añadir pedidos");
+        }
+
         if (reservation.getStatus()== ReservationStatus.CANCELADA ||
             reservation.getStatus() == ReservationStatus.COMPLETADA){
             throw new BusinessRuleException("No se pueden añadir pedidos a esta reserva");

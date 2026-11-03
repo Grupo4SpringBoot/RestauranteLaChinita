@@ -79,6 +79,12 @@ public class ReservationService {
         return reservationRepository.findAll().stream().map(reservationMapper::toResponse).toList();
     }
 
+    @Transactional(readOnly = true)
+    public List<ReservationResponse> findMine(String email) {
+        return reservationRepository.findByUser_EmailOrderByDateTimeDesc(email)
+                .stream().map(reservationMapper::toResponse).toList();
+    }
+
     @Transactional
     public Optional<ReservationResponse> updateStatus(Integer id, ReservationStatus status) {
         Optional<Reservation> found = reservationRepository.findById(id);
@@ -87,8 +93,25 @@ public class ReservationService {
         }
 
         Reservation reservation = found.get();
+        ReservationStatus current = reservation.getStatus();
+
+        if (current == status) {
+            return Optional.of(reservationMapper.toResponse(reservation));
+        }
+
+        boolean allowed = switch (current) {
+            case PENDIENTE -> status == ReservationStatus.CONFIRMADA || status == ReservationStatus.CANCELADA;
+            case CONFIRMADA -> status == ReservationStatus.COMPLETADA || status == ReservationStatus.CANCELADA;
+            case COMPLETADA, CANCELADA -> false;
+        };
+        if (!allowed) {
+            throw new BusinessRuleException("No se permite cambiar de: " + current + " a " + status);
+        }
+
         reservation.setStatus(status);
-        reservation.setConfirmed(status == ReservationStatus.CONFIRMADA);
+        if (status == ReservationStatus.CONFIRMADA) {
+            reservation.setConfirmed(true);
+        }
 
         return Optional.of(reservationMapper.toResponse(reservationRepository.save(reservation)));
     }

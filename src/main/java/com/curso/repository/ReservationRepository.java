@@ -14,6 +14,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
     boolean existsByMesa_IdAndStatusInAndDateTimeGreaterThanAndDateTimeLessThan(Integer mesaId,
                                                                                 List<ReservationStatus> statuses,
                                                                                 LocalDateTime limiteAnterior, LocalDateTime fin);
-
     List<Reservation> findByStatusAndCreatedAtBefore(ReservationStatus status, LocalDateTime limite);
+
+
 }

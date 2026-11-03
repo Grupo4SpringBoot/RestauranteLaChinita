@@ -1,6 +1,7 @@
 package com.curso.dto;
 
 import com.curso.model.OrderStatus;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,6 +14,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class OrderResponse {
+
 
     private Integer id;
     private Integer reservationId;

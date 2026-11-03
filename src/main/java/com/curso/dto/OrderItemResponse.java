@@ -1,5 +1,6 @@
 package com.curso.dto;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,6 +11,7 @@ import java.math.BigDecimal;
 @Setter
 @NoArgsConstructor
 public class OrderItemResponse {
+
 
     private Integer id;
     private Integer productId;

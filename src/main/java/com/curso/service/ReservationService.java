@@ -5,10 +5,7 @@ import com.curso.dto.ReservationResponse;
 import com.curso.exception.BusinessRuleException;
 import com.curso.exception.ResourceNotFoundException;
 import com.curso.mapper.ReservationMapper;
-import com.curso.model.AppUser;
-import com.curso.model.Reservation;
-import com.curso.model.ReservationStatus;
-import com.curso.model.RestaurantTable;
+import com.curso.model.*;
 import com.curso.repository.AppUserRepository;
 import com.curso.repository.ReservationRepository;
 import com.curso.repository.RestaurantTableRepository;
@@ -28,7 +25,7 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 public class ReservationService {
 
     /** Duracion de una reserva: la mesa queda bloqueada durante estas horas desde su inicio. */
-    public static final int DURACION_RESERVA_HORAS = 2;
+    public static final int DURACION_RESERVA_HORAS = 1;
 
     private final ReservationRepository reservationRepository;
     private final RestaurantTableRepository tableRepository;
@@ -128,4 +125,6 @@ public class ReservationService {
 
         return mesa;
     }
+
+
 }
